@@ -1,0 +1,72 @@
+body{height:100%;}#main{background-color:#B3DAF6;width:100%;height:100vh;overflow:hidden;position:relative;}#sky{>img{width:2736px;height:797px;}}#sky{position:absolute;width:fit-content;height:fit-content;bottom:-40px;left:-1000px;}#clouds{>img{width:2100px;height:565px;}}#clouds{position:absolute;width:fit-content;height:fit-content;top:10px;left:-200px;}#mountains{>img{width:1266px;height:975px;}}#mountains{position:absolute;width:fit-content;height:fit-content;bottom:-235px;right:-400px;}
+
+
+
+
+
+
+
+
+
+  
+.container {
+    position: relative;
+    height: 100vh;
+}
+.static-div, .moving-div {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+}
+.static-div {
+    top: 100px;
+    left: 100px;
+}
+.moving-div {
+    animation: moveAnimation 5s linear infinite;
+}
+  
+@keyframes moveAnimation {
+    0% {
+      top: 70px;
+      left: 70px;
+    }
+    25%{
+        top:170px;
+        left:70px;
+    }
+    50% {
+      top: 170px;
+      left: 170px;
+    }
+    75%{
+        top:70px;
+        left:170px;
+    }
+    100% {
+      top: 70px;
+      left: 70px;
+    }
+}
+  
+.kite-wire {
+    position: absolute;
+    width: 2px;
+    height: 0;
+    border: 1px solid black;
+    color: red;
+}
+  
+  /* Adjust the kite-wire's position based on the static and moving divs */
+.kite-wire::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: calc(100% - 50px); /* Adjust the height based on your design */
+    background-color: black;
+    transform-origin: top;
+    transform: rotate(45deg);
+    top: 50px;
+    left: 50px;
+}
