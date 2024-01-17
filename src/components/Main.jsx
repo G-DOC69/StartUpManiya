@@ -19,6 +19,33 @@ const Main = () => {
         const interval = setInterval(() => getTime(deadline), 1000);
         return () => clearInterval(interval);
     }, []);
+
+
+    const [linePosition, setLinePosition] = useState({ x1: 50, y1: 50, x2: 350, y2: 350 });
+
+  // Assume you have a function that gets the current position of the moving div
+  const getMovingDivPosition = () => {
+    const movingDiv = document.getElementById("");
+    const rect = movingDiv.getBoundingClientRect();
+    return { x: rect.left, y: rect.top };
+  };
+
+  useEffect(() => {
+    const updateLine = () => {
+      const movingDivPosition = getMovingDivPosition();
+      setLinePosition((prevLinePosition) => ({
+        ...prevLinePosition,
+        x2: movingDivPosition.x,
+        y2: movingDivPosition.y,
+      }));
+    };
+    const intervalId = setInterval(updateLine, 10);
+    return () => clearInterval(intervalId);
+  }, []);
+
+
+
+
   return (
     <div id='main'>
         <div id='background'>
@@ -46,11 +73,23 @@ const Main = () => {
                     <div id='seconds'>{seconds}<p className='timer_text'>СЕКУНД</p></div>
                 </div>
             </div>
-            <div id="br_block"></div>
+            <br/>
         </div>
         <div id="boys_with_kites">
             <div id="boys">
                 <img src="../src/assets/HomePageAssets/cartoonboys.svg" alt=""/>
+            </div>
+            <div id="lines">
+                <svg width="500" height="500"><line x1="50" y1="50" x2="350" y2="350" stroke="black"/></svg>
+                <svg width="500" height="500"><line x1="50" y1="50" x2="350" y2="350" stroke="black"/></svg>
+                <svg width="500" height="500"><line x1="50" y1="50" x2="350" y2="350" stroke="black"/></svg>
+            </div>
+            <div id="kite_container">
+                <div id="kites">
+                    <img src="../src/assets/HomePageAssets/kite1.svg" alt="" id='kite1'/>
+                    <img src="../src/assets/HomePageAssets/kite2.svg" alt="" id='kite2'/>
+                    <img src="../src/assets/HomePageAssets/kite3.svg" alt="" id='kite3'/>
+                </div>
             </div>
         </div>
     </div>
