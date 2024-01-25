@@ -12,7 +12,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const handleSubmit = async (e) => {e.preventDefault();
     try {
-        const response = await axiosClient.post('/api/v1/login/', {
+        const response = await axiosClient.post('/api/v1/regauth/registr', {
             nickname: nickname,
             email: email,
             password: password

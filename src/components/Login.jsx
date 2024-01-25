@@ -6,12 +6,12 @@ import axiosClient from "../app/Api.js"
 const Login = () => {
     const [isAuth, setIsAuth] = useContext(AuthContext)
     const [user, setUser] = useContext(UserContext)
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const handleSubmit = async (e) => {e.preventDefault();
     try {
-        const response = await axiosClient.post('/api/v1/login/', {
-            email: email,
+        const response = await axiosClient.post('/api/v1/regauth/login/', {
+            username: username,
             password: password
         });
 
@@ -43,9 +43,12 @@ const Login = () => {
                 <div className="login_background"></div>
                 <div className="login_title"><h1>Войти в аккаунт</h1></div>
                 <form className='login_form' onSubmit={handleSubmit}>
-                    <input className='login_inputs'type="email"
+                    {/* <input className='login_inputs'type="email"
                     value={email} onChange={(e) => setEmail(e.target.value)}
-                    required placeholder='Электронный Адрес'/>
+                    required placeholder='Электронный Адрес'/> */}
+                    <input className='login_inputs'type="text"
+                    value={username} onChange={(e) => setUsername(e.target.value)}
+                    required placeholder='Имя Профиля'/>
                     <input className='login_inputs' type="password"
                     value={password} onChange={(e) => setPassword(e.target.value)}
                     required placeholder='Пароль'/>
