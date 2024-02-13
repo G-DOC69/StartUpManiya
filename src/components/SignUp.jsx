@@ -2,31 +2,79 @@ import React, { useState, useContext } from 'react';
 import '../styles/AuthStyle.scss'
 import {AuthContext, UserContext} from "../App.jsx";
 import axiosClient from "../app/Api.js"
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+    const navigate = useNavigate ();
     const [isAuth, setIsAuth] = useContext(AuthContext)
     const [user, setUser] = useContext(UserContext)
-    const [nickname,setNickname] = useState ('')
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const handleSubmit = async (e) => {e.preventDefault();
-    try {
-        const response = await axiosClient.post('/api/v1/regauth/registr', {
-            nickname: nickname,
-            email: email,
-            password: password
-        });
-
-        if (response?.data?.access)
-            localStorage.setItem('access_token', response.data.access);
-
-        if (response?.data?.refresh)
-            localStorage.setItem('refresh_token', response.data.refresh);
-
-        setIsAuth(true)
-    }catch (e){console.log(e)
-    }};
+    const [formData, setFormData] = useState({
+        username: '',
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        phone: '',
+      });
+      const [errors, setErrors] = useState({});
+    
+      const validateForm = () => {
+        const newErrors = {};    
+        if (!formData.username.trim()) {
+          newErrors.username = '*Укажите Имя Пользователя';
+        } else if (!/^[a-zA-Z0-9]+$/.test(formData.username)) {
+          newErrors.username = '*Имя Пользователя Может Иметь Только Латинские Буквы';
+        } else if (formData.username.length > 20) {
+          newErrors.username = '*Имя Пользователя Должно Состоять Из 20 Или Менее Символов';
+        }    
+        if (!formData.name.trim()) {
+            newErrors.name = '*Укажите Ваше Имя';
+        } else if (!/^[a-zA-Z ]+$/.test(formData.name)) {
+            newErrors.name = '*Имя Может Иметь Только Латинские Буквы И Пробелы';
+        } else if (formData.name.length > 20) {
+            newErrors.name = '*Имя Должно Состоять Из 20 Или Менее Символов';
+        }   
+        if (!formData.password.trim()) {
+            newErrors.password = '*Придумайте Пароль';
+          } else if (formData.password.length < 8 || formData.password.length > 20) {
+            newErrors.password = '*Пароль Должен Быть От 8 До 20 Символов';
+          } else if (!/^[a-zA-Z0-9]+$/.test(formData.password)) {
+            newErrors.password = '*Пароль Может Иметь Только Латинские Буквы И Цифры';
+        }    
+        if (!formData.confirmPassword.trim()) {
+            newErrors.confirmPassword = '*Подтвердите Пароль';
+        } else if (formData.confirmPassword !== formData.password) {
+            newErrors.confirmPassword = '*Пароли Не Совпадают';
+        }   
+        if (!formData.phone.trim()) {
+          newErrors.phone = '*Укажите Ваш Номер Телефона';
+        } else if (!/^\+\d+$/.test(formData.phone)) {
+          newErrors.phone = '*Номер Должен Начинаться С + И Состоять Только Из Цифр';
+        }    
+        if (!formData.email.trim()) {
+          newErrors.email = '*Укажите Ваш Электронный Адрес';
+        } else if (!/^\w+([\.-]?\w+)*@gmail.com$/.test(formData.email)) {
+          newErrors.email = '*Принимаются Только Электронные Адреса Домена @gmail.com';
+        }
+    
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+      };
+    
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (validateForm()) {
+          try {
+            const response = await axiosClient.post('/api/v1/regauth/registr', formData);
+            if (response.status === 200) {navigate('/confirm')}
+          } catch (e) {
+            console.log(e);
+          }
+        } else {
+          console.log('Form has errors:', errors);
+        }
+    };
+    const handleChange = (e) => {setFormData({ ...formData, [e.target.name]: e.target.value });};
   return (
     <div className='auth'>
         <div className="background">
@@ -47,17 +95,29 @@ const SignUp = () => {
                 <div className="login_title"><h1>Зарегистрироваться</h1></div>
                 <form className='login_form' onSubmit={handleSubmit}>
                     <input className='login_inputs'type="text"
-                    value={nickname} onChange={(e) => setNickname(e.target.value)}
-                    required placeholder='Псевдоним'/>
+                    value={formData.username} name='username' onChange={handleChange}
+                    placeholder='Имя Пользователя'/>
+                    {errors.username && <span className='span_error'>{errors.username}</span>}
+                    <input className='login_inputs'type="text"
+                    value={formData.name} name='name' onChange={handleChange}
+                    placeholder='Имя'/>
+                    {errors.name && <span className="span_error">{errors.name}</span>}
                     <input className='login_inputs'type="email"
-                    value={email} onChange={(e) => setEmail(e.target.value)}
-                    required placeholder='Электронный Адрес'/>
+                    value={formData.email} name='email' onChange={handleChange}
+                    placeholder='Электронный Адрес'/>
+                    {errors.email && <span className="span_error">{errors.email}</span>}
                     <input className='login_inputs' type="password"
-                    value={password} onChange={(e) => setPassword(e.target.value)}
-                    required placeholder='Пароль'/>
+                    value={formData.password} name='password' onChange={handleChange}
+                    placeholder='Пароль'/>
+                    {errors.password && <span className="span_error">{errors.password}</span>}
                     <input className='login_inputs' type="password"
-                    value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
-                    required placeholder='Подтвердите Пароль'/>
+                    value={formData.confirmPassword} name='confirmPassword' onChange={handleChange}
+                    placeholder='Подтвердите Пароль'/>
+                    {errors.confirmPassword && <span className="span_error">{errors.confirmPassword}</span>}
+                    <input className='login_inputs' type="text"
+                    value={formData.phone} name='phone' onChange={handleChange}
+                    placeholder='Номер Телефона'/>
+                    {errors.phone && <span className="span_error">{errors.phone}</span>}
                     <button className='login_button' type="submit">Зарегистрироваться</button>
                 </form>
                 <div className="login_redirect_container">

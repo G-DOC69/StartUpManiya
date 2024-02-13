@@ -2,28 +2,60 @@ import React, { useState, useContext } from 'react';
 import '../styles/AuthStyle.scss'
 import {AuthContext, UserContext} from "../App.jsx";
 import axiosClient from "../app/Api.js"
+import { useNavigate } from 'react-router-dom';
+
 
 const Login = () => {
+    const navigate = useNavigate();
     const [isAuth, setIsAuth] = useContext(AuthContext)
     const [user, setUser] = useContext(UserContext)
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const handleSubmit = async (e) => {e.preventDefault();
-    try {
-        const response = await axiosClient.post('/api/v1/regauth/login/', {
-            username: username,
-            password: password
-        });
-
-        if (response?.data?.access)
-            localStorage.setItem('access_token', response.data.access);
-
-        if (response?.data?.refresh)
-            localStorage.setItem('refresh_token', response.data.refresh);
-
-        setIsAuth(true)
-    }catch (e){console.log(e)
-    }};
+    const [formData, setFormData] = useState({
+        username: '',
+        password: '',
+      });
+      const [errors, setErrors] = useState({});
+      const [error, setError] = useState('');
+      const validateForm = () => {
+        const newErrors = {};    
+        if (!formData.username.trim()) {
+          newErrors.username = '*Укажите Имя Пользователя';
+        } else if (!/^[a-zA-Z0-9]+$/.test(formData.username)) {
+          newErrors.username = '*Недействительное Имя Пользователя';
+        } else if (formData.username.length > 20) {
+          newErrors.username = '*Недействительное Имя Пользователя';
+        }
+        if (!formData.password.trim()) {
+            newErrors.password = '*Укажите Ваш Пароль';
+          } else if (formData.password.length < 8 || formData.password.length > 20) {
+            newErrors.password = '*Недействительный Пароль';
+          } else if (!/^[a-zA-Z0-9]+$/.test(formData.password)) {
+            newErrors.password = '*Недействительный Пароль';
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+      };
+    
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (validateForm()) {
+          try {
+            const response = await axiosClient.post('/api/v1/regauth/registr', formData);
+            if (response?.data?.access)localStorage.setItem('access_token', response.data.access);
+            if (response?.data?.refresh) localStorage.setItem('refresh_token', response.data.refresh);
+            if (response.status === 200) {
+              navigate('/')
+              setIsAuth(true);
+            } else {
+              setError('Неправильный Логин или Пароль');
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        } else {
+          console.log('Form has errors:', errors);
+        }
+    };
+    const handleChange = (e) => {setFormData({ ...formData, [e.target.name]: e.target.value });};
   return (
     <div className='auth'>
         <div className="background">
@@ -43,16 +75,16 @@ const Login = () => {
                 <div className="login_background"></div>
                 <div className="login_title"><h1>Войти в аккаунт</h1></div>
                 <form className='login_form' onSubmit={handleSubmit}>
-                    {/* <input className='login_inputs'type="email"
-                    value={email} onChange={(e) => setEmail(e.target.value)}
-                    required placeholder='Электронный Адрес'/> */}
-                    <input className='login_inputs'type="text"
-                    value={username} onChange={(e) => setUsername(e.target.value)}
-                    required placeholder='Имя Профиля'/>
-                    <input className='login_inputs' type="password"
-                    value={password} onChange={(e) => setPassword(e.target.value)}
-                    required placeholder='Пароль'/>
-                    <button className='login_button' type="submit">Войти</button>
+                  <input className='login_inputs'type="text"
+                  value={formData.username} name='username' onChange={handleChange}
+                  placeholder='Имя Пользователя'/>
+                  {errors.username && <span className='span_error'>{errors.username}</span>}
+                  <input className='login_inputs' type="password"
+                  value={formData.password} name='password' onChange={handleChange}
+                  placeholder='Пароль'/>
+                  {errors.password && <span className="span_error">{errors.password}</span>}
+                  {error && <span className='span_error'>{error}</span>}
+                  <button className='login_button' type="submit">Войти</button>
                 </form>
                 <div className="login_redirect_container">
                     <p className='login_redirect'>Забыл Пароль ?

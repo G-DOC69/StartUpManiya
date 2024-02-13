@@ -1,5 +1,4 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {counterSlice} from "../CounterSlice.js";
 
 const storedRole = localStorage.getItem("role");
 const initialRole = storedRole ? JSON.parse(storedRole) : false;

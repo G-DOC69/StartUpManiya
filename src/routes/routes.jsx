@@ -3,6 +3,7 @@ import {Routes,Route} from 'react-router-dom'
 import LoginPage from '../pages/LoginPage'
 import SignUpPage from '../pages/SignUpPage'
 import CabinetPage from '../pages/CabinetPage'
+import ConfirmPage from '../pages/ConfirmPage'
 const MainRoutes = () => {
     const PUBLIC_ROUTES=[
         {
@@ -21,6 +22,10 @@ const MainRoutes = () => {
           element:<CabinetPage/>,
           path:'/cabinet',
           id:4,
+        },{
+          element:<ConfirmPage/>,
+          path:'/confirm',
+          id:5,
         },
     ]
   return(

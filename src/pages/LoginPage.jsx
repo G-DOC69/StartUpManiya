@@ -5,10 +5,11 @@ import Logged from '../components/Logged.jsx'
 import SideBar from "../components/SideBar.jsx"
 
 const LoginPage = () => {
-    const [isAuth, setIsAuth] = useContext(AuthContext)
+    const [isAuth] = useContext(AuthContext)
   return (
     <div id="login_page">
-        {isAuth ? <Logged/> :<Login/>}
+        {/* {isAuth ? <Logged/> :<Login/>} */}
+        <Login/>
     </div>
   )
 }

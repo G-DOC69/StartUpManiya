@@ -4,11 +4,11 @@ const Cabinet = () => {
     const user ={
         id: 1,
         tags:['UX/UI designer','Frontend разработчик','Проект менеджер'],
-        username:'G-DOC69',
-        firstname:'Erlan',
-        secondname:'Turarov',
+        username:'bekxwt',
+        firstname:'Bekzat',
+        secondname:'Bakytbek uulu',
         registrdate:'16 Августа',
-        email:'erl***@gmail.com',
+        email:'bekzat@gmail.com',
         skills:['JavaScript','Figma','HTML,CSS','React'],
         works:[
             {

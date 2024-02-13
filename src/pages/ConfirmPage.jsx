@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Logged = () => {
+const ConfirmPage = () => {
   return (
     <div>
-      ASNskld
+      
     </div>
   )
 }
 
-export default Logged
+export default ConfirmPage

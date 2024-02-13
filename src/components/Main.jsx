@@ -47,11 +47,19 @@ const Main = () => {
             <div id='mountains'><img src="../src/assets/HomePageAssets/mountains.svg" alt=""/></div>
             <div id="forest"><img src="../src/assets/HomePageAssets/forest.svg" alt="" /></div>
             <div id='clouds'>
-                <div id="cloud_container">
+                <div className="cloud_container">
                     <img src="../src/assets/HomePageAssets/cloud1.svg" alt="" id='cloud1'/>
                     <img src="../src/assets/HomePageAssets/cloud2.svg" alt="" id='cloud2'/>
                     <img src="../src/assets/HomePageAssets/cloud3.svg" alt="" id='cloud3'/>
                     <img src="../src/assets/HomePageAssets/cloud4.svg" alt="" id='cloud4'/>
+                </div>
+            </div>
+            <div id='clouds2'>
+                <div className="cloud_container">
+                    <img src="../src/assets/HomePageAssets/cloud1.svg" alt="" id='cloud5'/>
+                    <img src="../src/assets/HomePageAssets/cloud2.svg" alt="" id='cloud6'/>
+                    <img src="../src/assets/HomePageAssets/cloud4.svg" alt="" id='cloud7'/>
+                    <img src="../src/assets/HomePageAssets/cloud3.svg" alt="" id='cloud8'/>
                 </div>
             </div>
         </div>
