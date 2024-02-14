@@ -2,7 +2,7 @@ import React from 'react'
 
 const Confirm = () => {
   return (
-    <div>
+    <div id='confirm'>
       
     </div>
   )

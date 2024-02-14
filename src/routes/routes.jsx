@@ -4,6 +4,8 @@ import LoginPage from '../pages/LoginPage'
 import SignUpPage from '../pages/SignUpPage'
 import CabinetPage from '../pages/CabinetPage'
 import ConfirmPage from '../pages/ConfirmPage'
+import ProfilePage from '../pages/ProfilePage'
+import NotFoundPage from '../pages/NotFoundPage'
 const MainRoutes = () => {
     const PUBLIC_ROUTES=[
         {
@@ -26,6 +28,14 @@ const MainRoutes = () => {
           element:<ConfirmPage/>,
           path:'/confirm',
           id:5,
+        },{
+          element:<ProfilePage/>,
+          path:'/profile',
+          id:6,
+        },{
+          element:<NotFoundPage/>,
+          path:'*',
+          id:100,
         },
     ]
   return(
