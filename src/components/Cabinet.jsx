@@ -1,6 +1,7 @@
 import '../styles/CabinetStyle.scss'
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react'
+import BottomBar from './BottomBar';
 
 const Cabinet = () => {
     const navigate = useNavigate();
@@ -188,6 +189,7 @@ const Cabinet = () => {
                 </div>
             </div>
         </div>
+        <BottomBar/>
     </div>
   )
 }

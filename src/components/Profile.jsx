@@ -1,6 +1,20 @@
 import '../styles/CabinetStyle.scss'
+import { useState } from 'react'
+import BottomBar from './BottomBar';
+
 
 const Profile = () => {
+    const [showContainer1, setShowContainer1] = useState(true);
+    const [showContainer2, setShowContainer2] = useState(false);
+    const toggleContainer1 = () => {
+        setShowContainer1(true);
+        setShowContainer2(false);
+    };
+
+    const toggleContainer2 = () => {
+        setShowContainer1(false);
+        setShowContainer2(true);
+    };
     const user = {
         id: 1,
         tags: ['Developer', 'Designer', 'Manager', 'Administrator'],
@@ -174,6 +188,7 @@ const Profile = () => {
                 </div>
             </div>
         </div>
+        <BottomBar/>
     </div>
   )
 }
