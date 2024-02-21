@@ -1,8 +1,7 @@
-import {AuthContext} from "../App.jsx"
+import {AuthContext} from "../AuthGate.jsx";
 import {useContext} from "react"
 import Login from '../components/Login.jsx'
 import Logged from '../components/Logged.jsx'
-import SideBar from "../components/SideBar.jsx"
 
 const LoginPage = () => {
     const [isAuth] = useContext(AuthContext)

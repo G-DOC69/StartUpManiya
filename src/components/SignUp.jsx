@@ -1,13 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import '../styles/AuthStyle.scss'
-import {AuthContext, UserContext} from "../App.jsx";
 import axiosClient from "../app/Api.js"
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
     const navigate = useNavigate ();
-    const [isAuth, setIsAuth] = useContext(AuthContext)
-    const [user, setUser] = useContext(UserContext)
     const [formData, setFormData] = useState({
         username: '',
         name: '',
@@ -15,10 +12,16 @@ const SignUp = () => {
         password: '',
         confirmPassword: '',
         phone: '',
-      });
-      const [errors, setErrors] = useState({});
-    
-      const validateForm = () => {
+    });
+    const [data,setData] = useState({
+      username:'',
+      name: '',
+      email: '',
+      password_confirm: '',
+      phone: '',
+    })
+    const [errors, setErrors] = useState({});
+    const validateForm = () => {
         const newErrors = {};    
         if (!formData.username.trim()) {
           newErrors.username = '*Укажите Имя Пользователя';
@@ -59,13 +62,20 @@ const SignUp = () => {
     
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
-      };
-    
-      const handleSubmit = async (e) => {
+    };
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
+          setData({
+            username: formData.username,
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            password_confirm: formData.confirmPassword,
+            phone_number: formData.phone,
+          });
           try {
-            const response = await axiosClient.post('/api/v1/regauth/registr', formData);
+            const response = await axiosClient.post('/api/v1/regauth/register/',data);
             if (response.status === 200) {navigate('/confirm')}
           } catch (e) {
             console.log(e);

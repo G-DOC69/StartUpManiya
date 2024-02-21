@@ -1,11 +1,9 @@
-import React from 'react'
-
+import Confirm from '../components/Confirm'
 const ConfirmPage = () => {
   return (
-    <div>
-      
+    <div id='confirm_page'>
+      <Confirm/>
     </div>
   )
 }
-
 export default ConfirmPage

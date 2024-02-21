@@ -1,10 +1,8 @@
 import '../styles/CabinetStyle.scss'
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react'
 import BottomBar from './BottomBar';
 
 const Cabinet = () => {
-    const navigate = useNavigate();
     const [showContainer1, setShowContainer1] = useState(true);
     const [showContainer2, setShowContainer2] = useState(false);
     const toggleContainer1 = () => {

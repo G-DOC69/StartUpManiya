@@ -1,5 +1,5 @@
 import '../styles/SideBarStyle.scss'
-import {AuthContext, UserContext} from "../App.jsx";
+import {AuthContext} from "../AuthGate.jsx";
 import React, { useState, useContext } from 'react';
 
 const SideBar = () => {
@@ -19,7 +19,8 @@ const animationStyles = {
         <a id="logo_container" style={{cursor:'pointer'}} href='/'>
           <img src="../src/assets/SideBarAssets/logo.svg" alt="" />
         </a>
-        <ul id='nav'>
+        {isAuth &&
+        (<ul id='nav'>
           {items.map((item, index) => (
             <li className='nav_element' key={index}>
               <a className='nav_link' href={item.href}>
@@ -28,12 +29,20 @@ const animationStyles = {
               </a>
             </li>
           ))}
-        </ul>
+        </ul>)
+        }
         <div id="profile_out">
-          <a className='nav_link' href="/profile">
-            {isAuth?(<img className='nav_logo' src='../src/assets/SidebarAssets/signout.svg' alt='<' /> ):(<img className='nav_logo' src='../src/assets/SidebarAssets/signin.svg' alt='>'/>)}
-            {isAuth?'Выйти':'Войти'}
+          {isAuth?
+          (<a className='nav_link' href="/login" onClick={() => localStorage.clear()}>
+            <img className='nav_logo' src='../src/assets/SidebarAssets/signout.svg' alt='<' />
+            Выйти
           </a>
+          ):(
+          <a className='nav_link' href="/login">
+            <img className='nav_logo' src='../src/assets/SidebarAssets/signin.svg' alt='>'/>
+            Войти
+          </a>
+          )}
         </div>
       </div>
       <div id="sidebar_slider" onClick={handleButtonClick}>
@@ -42,10 +51,13 @@ const animationStyles = {
       <div id="topbar">
         <div id="topbar_container">
           <img id='topbar_logo' src="../src/assets/SideBarAssets/logo.svg" alt="" />
-          <a href='cabinet' id='profile_top'>
-            <span>Profile</span>
+          {isAuth?(<a href='cabinet' id='profile_top'>
+            <span>Профиль</span>
             <img width={45} height={45} src="../src/assets/SideBarAssets/user.svg" alt="" />
-          </a>
+          </a>):(<a href='login' id='profile_top'>
+            <span>Войти</span>
+            <img width={35} height={35} src="../src/assets/SideBarAssets/signin.svg" alt="" />
+          </a>)}
         </div>
       </div>
     </div>

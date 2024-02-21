@@ -1,5 +1,5 @@
 import '../styles/SideBarStyle.scss'
-import {AuthContext, UserContext} from "../App.jsx";
+import {AuthContext} from "../AuthGate.jsx";
 import React, { useState, useContext } from 'react';
 
 const BottomBar = () => {

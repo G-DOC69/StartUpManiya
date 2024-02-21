@@ -1,59 +1,60 @@
 import React, { useState, useContext } from 'react';
 import '../styles/AuthStyle.scss'
-import {AuthContext, UserContext} from "../App.jsx";
+import {AuthContext} from "../AuthGate.jsx";
 import axiosClient from "../app/Api.js"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , useLocation } from 'react-router-dom';
 
 
 const Login = () => {
     const navigate = useNavigate();
-    const [isAuth, setIsAuth] = useContext(AuthContext)
-    const [user, setUser] = useContext(UserContext)
-    const [formData, setFormData] = useState({
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const errorMessage = queryParams.get('error');
+    const [ isAuth, setIsAuth] = useContext(AuthContext)
+    const [ formData, setFormData] = useState({
         username: '',
         password: '',
       });
-      const [errors, setErrors] = useState({});
-      const [error, setError] = useState('');
-      const validateForm = () => {
-        const newErrors = {};    
-        if (!formData.username.trim()) {
-          newErrors.username = '*Укажите Имя Пользователя';
-        } else if (!/^[a-zA-Z0-9]+$/.test(formData.username)) {
-          newErrors.username = '*Недействительное Имя Пользователя';
-        } else if (formData.username.length > 20) {
-          newErrors.username = '*Недействительное Имя Пользователя';
-        }
-        if (!formData.password.trim()) {
-            newErrors.password = '*Укажите Ваш Пароль';
-          } else if (formData.password.length < 8 || formData.password.length > 20) {
-            newErrors.password = '*Недействительный Пароль';
-          } else if (!/^[a-zA-Z0-9]+$/.test(formData.password)) {
-            newErrors.password = '*Недействительный Пароль';
-        }
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-      };
-    
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (validateForm()) {
-          try {
-            const response = await axiosClient.post('/api/v1/regauth/registr', formData);
-            if (response?.data?.access)localStorage.setItem('access_token', response.data.access);
-            if (response?.data?.refresh) localStorage.setItem('refresh_token', response.data.refresh);
-            if (response.status === 200) {
-              navigate('/')
-              setIsAuth(true);
-            } else {
-              setError('Неправильный Логин или Пароль');
-            }
-          } catch (e) {
-            console.log(e);
+    const [errors, setErrors] = useState({});
+    const [error, setError] = useState('');
+    const validateForm = () => {
+      const newErrors = {};    
+      if (!formData.username.trim()) {
+        newErrors.username = '*Укажите Имя Пользователя';
+      } else if (!/^[a-zA-Z0-9]+$/.test(formData.username)) {
+        newErrors.username = '*Недействительное Имя Пользователя';
+      } else if (formData.username.length > 20) {
+        newErrors.username = '*Недействительное Имя Пользователя';
+      }
+      if (!formData.password.trim()) {
+          newErrors.password = '*Укажите Ваш Пароль';
+        } else if (formData.password.length < 8 || formData.password.length > 20) {
+          newErrors.password = '*Недействительный Пароль';
+        } else if (!/^[a-zA-Z0-9]+$/.test(formData.password)) {
+          newErrors.password = '*Недействительный Пароль';
+      }
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      // if (validateForm()) {
+        try {
+          const response = await axiosClient.post('/api/v1/regauth/login/', formData);
+          if (response?.data?.access)localStorage.setItem('access_token', response.data.access);
+          if (response?.data?.user_id)localStorage.setItem('user_id', response.data.user_id);
+          if (response.status === 200) {
+            navigate('/')
+            setIsAuth(true);
+          } else {
+            setError('Неправильный Логин или Пароль');
           }
-        } else {
-          console.log('Form has errors:', errors);
+        } catch (e) {
+          console.log(e);
         }
+      // } else {
+      //   console.log('Form has errors:', errors);
+      // }
     };
     const handleChange = (e) => {setFormData({ ...formData, [e.target.name]: e.target.value });};
   return (
