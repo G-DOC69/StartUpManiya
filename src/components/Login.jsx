@@ -85,7 +85,7 @@ const Login = () => {
                   placeholder='Пароль'/>
                   {errors.password && <span className="span_error">{errors.password}</span>}
                   {error && <span className='span_error'>{error}</span>}
-                  <button className='login_button' type="submit">Войти</button>
+                  <button className='login_button' type="submit" onClick={localStorage.clear()}>Войти</button>
                 </form>
                 <div className="login_redirect_container">
                     <p className='login_redirect'>Забыл Пароль ?

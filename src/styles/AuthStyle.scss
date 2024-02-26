@@ -28,7 +28,7 @@ h1{margin:0;}
 .login_redirect_link{color:black;}
 .login_redirect_link:hover{color:#DD403F;}
 .span_error{width:80%;display:flex;align-items:start;flex-wrap:wrap;color:red;font-size:13px;font-family:'Bainsley',sans-serif;}
-#confirm{width:80%;font-family:'Bainsley',sans-serif;}
+#confirm{width:80%;font-family:'Bainsley',sans-serif;display: flex;justify-content:space-between;>img{width:45px;height:45px;};align-items:center;}
 @media screen and (max-width:768px){.login_container{width:480px;}.login_title{font-size:22px;}.login_inputs{font-size:15px;}.login_button{padding:15px 40px;font-size:22px;}.login_redirect{font-size:15px;}#confirm{font-size:15px;}}
 @media screen and (max-width:500px){.login_container{width:310px;}.login_title{font-size:14px;}.login_inputs{font-size:14px;width:75%;}.login_button{padding:10px 25px;font-size:17px;}.login_redirect{font-size:14px;}.span_error{font-size:12px;}#confirm{font-size:14px;}}
 @media screen and (min-width:1800px){.background{display:none;}.login_container{transform:scale(1.3);}}

@@ -10,7 +10,7 @@ const AuthGate = () => {
         username: '',
         firstname: '',
         secondname: '',
-        registrdate: '',
+        created_at: '',
         email:'',
         skills: [],
         works: [],
@@ -25,7 +25,7 @@ const AuthGate = () => {
           try {
             const access_token = localStorage.getItem('access_token');
             if (!access_token) {
-              return;
+              navigate('/login')
             }
             const response = await axiosClient.get('/api/v1/regauth/user-info', {
               headers: {
@@ -44,9 +44,9 @@ const AuthGate = () => {
                   id: userData.id,
                   tags: userData.tags,
                   username: userData.username,
-                  firstname: userData.firstname,
-                  secondname: userData.secondname,
-                  registrdate: userData.registrdate,
+                  name: userData.firstname,
+                  second_name: userData.secondname,
+                  created_at: userData.created_at,
                   email: userData.email,
                   skills: userData.skills,
                   works: userData.works,

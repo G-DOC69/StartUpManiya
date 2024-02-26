@@ -1,6 +1,7 @@
 import '../styles/CabinetStyle.scss'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import BottomBar from './BottomBar';
+import axiosClient from "../app/Api.js"
 
 const Cabinet = () => {
     const [showContainer1, setShowContainer1] = useState(true);
@@ -9,76 +10,61 @@ const Cabinet = () => {
         setShowContainer1(true);
         setShowContainer2(false);
     };
+    const handleCopyPhoneNumber = () => {
+        navigator.clipboard.writeText(user.phone_number)
+          .then(() => {
+            console.log('Phone number copied to clipboard');
+          })
+          .catch(err => {
+            console.error('Failed to copy phone number: ', err);
+          });
+      };
 
     const toggleContainer2 = () => {
         setShowContainer1(false);
         setShowContainer2(true);
     };
-    const user ={
-        id: 1,
-        tags:['UX/UI designer','Frontend разработчик','Проект менеджер','DEV OPS'],
-        username:'bekxwt',
-        firstname:'Bekzat',
-        secondname:'Bakytbek uulu',
-        registrdate:'16 Августа',
-        email:'bekzat@gmail.com',
-        skills:['JavaScript','Figma','HTML,CSS','React'],
-        works:[
-            {
-                id:1,
-                name:'Github',
-                logo:'https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png',
-                link:'https://github.com/G-DOC69/'
-            },{
-                id:2,
-                name:'Behance',
-                logo:'https://seeklogo.com/images/B/behance-logo-1373E40919-seeklogo.com.png',
-                link:'https://google.com'
+
+    useEffect(()=>{
+        const getUser = async () =>{
+            const access_token = localStorage.getItem('access_token');
+            if (!access_token) {
+                navigate('/login');
+            } else {
+                try {
+                const response = await axiosClient.get('/api/v1/regauth/user-info/', {
+                headers: {'Authorization': `Bearer ${access_token}`}
+                });
+                if (response.data.code){
+                localStorage.clear();
+                setError('"Ваша сессия истекла. Пожалуйста, войдите снова, чтобы продолжить пользоваться нашими услугами.');
+                navigate(`/login?error=${encodeURIComponent('auth')}`)
+                } else {
+                console.log(response.data)
+                setUser(response.data)
+                }
+                } catch (e) {
+                    console.log(e);
+                }
             }
-        ],
-        socials:[
-            {
-                id:1,
-                name:'Instagram',
-                logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/198px-Instagram_logo_2016.svg.png?20210403190622',
-                link:'https://www.instagram.com/svekolnikovsergej7/'
-            },{
-                id:2,
-                name:'VK',
-                logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/2048px-VK_Compact_Logo_%282021-present%29.svg.png',
-                link:'https://vk.com/'
-            },{
-                id:3,
-                name:'+996706182355',
-                logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/2062095_application_chat_communication_logo_whatsapp_icon.svg/800px-2062095_application_chat_communication_logo_whatsapp_icon.svg.png',
-                link:'https://web.whatsapp.com/'
-            }
-        ],
-        ideas:[
-            {
-                id:1,
-                name:'Lorem ipsum dolor sit amet, consectetur.',
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae semper nisl, non ultricies turpis. Etiam mollis orci sit amet quam pharetra, non pretium.',
-                hashtags:['#frontend','#react','#college'],
-                developers:3,
-                likes:2
-            },{
-                id:2,
-                name:'Lorem ipsum dolor sit amet, consectetur.',
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae semper nisl, non ultricies turpis. Etiam mollis orci sit amet quam pharetra, non pretium.',
-                hashtags:['#frontend','#react','#college'],
-                developers:3,
-                likes:2
-            },{
-                id:3,
-                name:'Lorem ipsum dolor sit amet, consectetur.',
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae semper nisl, non ultricies turpis. Etiam mollis orci sit amet quam pharetra, non pretium.',
-                hashtags:['#frontend','#react','#college'],
-                developers:3,
-                likes:2
-            },
-        ]
-    }
+        }
+        getUser();
+    },[])
+
+    const [user, setUser] = useState({
+        id: null,
+        tags: [],
+        username: '',
+        name: '',
+        second_name: '',
+        created_at: '',
+        phone_number: '',
+        email: '',
+        skills: [],
+        works: [],
+        socials: [],
+        ideas: []
+      });
   return (
     <div id="cabinet">
         <div id="background_container">
@@ -102,11 +88,12 @@ const Cabinet = () => {
                     <img id='user_picture' src="../src/assets/CabinetAssets/user.svg" alt="" />
                     <p id='user'>
                         {user.username}
-                        <span id='real_name'>{user.firstname} {user.secondname}</span>
+                        <span id='real_name'>{user.name} {user.second_name}</span>
                     </p>
                 </div>
                 <ul id="tags">
-                    {user.tags.map((tag, index) => (<li key={index} className={`tag`}>{tag}</li>))}
+                    {/* {user.tags.map((tag, index) => (<li key={index} className={`tag`}>{tag}</li>))} */}
+                    {user.tags}
                 </ul>
             </div>
             <div className="data_container" style={{display: showContainer1?'flex':'none'}}>
@@ -119,7 +106,7 @@ const Cabinet = () => {
                         <p className='data'>
                             <img src="../src/assets/CabinetAssets/calendar.svg" width={36} height={36} alt="" />
                             Зарегистрирован с
-                            {user.registrdate}
+                            {user.created_at}
                         </p>
                         <p className='data'>
                             <img src="../src/assets/CabinetAssets/mail.svg" width={39} height={32} alt="" />
@@ -129,7 +116,8 @@ const Cabinet = () => {
                     {user.skills.length > 0 && (
                         <div className="data_block" style={{ backgroundColor: 'rgba(251,184,0,0.50)'}}>
                             <h1 className='data_header'>Навыки</h1>
-                            {user.skills.map((skill,index)=>(<p key={index} className='skill'>{skill}</p>))}
+                            {/* {user.skills.map((skill,index)=>(<p key={index} className='skill'>{skill}</p>))} */}
+                            {user.skills}
                         </div>
                     )}
                 </div>
@@ -148,6 +136,7 @@ const Cabinet = () => {
                     {user.socials.length > 0 && (
                         <div className="data_block" style={{ backgroundColor: 'rgba(147,74,247,0.50)'}}>
                             <h1 className='data_header'>Контакты</h1>
+                            <p className='link'>{user.phone_number}</p>
                             {user.socials.map((social,id)=>(
                                 <p key={id} className='link'>
                                     <img style={{borderRadius:'10px'}} width={40} height={40} src={social.logo}/>
@@ -161,20 +150,20 @@ const Cabinet = () => {
             <div className="data_container" style={{display: showContainer2?'flex':'none'}}>
                 <button className="data_button purple"onClick={toggleContainer1}>Данные</button>
                 <button className="idea_button yellow">Идеи</button>
-                <div id="idea_container">
+                <div className="ideas_container">
                     {user.ideas.map((idea,id)=>(
                     <div key={id} className="idea_block">
                         <div className="idea">
                             <h3 className='idea_name'>{idea.name}</h3>
                             <p className='idea_description'>{idea.description}</p>
                             <ul className='idea_tags'>
-                                {idea.hashtags.map((hashtag,index)=>(<a value={hashtag} key={index} className='idea_tag'>{hashtag}</a>))}
+                                {/* {idea.tags.map((hashtag,index)=>(<a value={hashtag} key={index} className='idea_tag'>{hashtag}</a>))} */}
                             </ul>
                         </div>
                         <div className="idea_interactables">
                             <div className="idea_interactable" style={{color:'#934AF7'}}>
                                 <img width={40} height={34} src="../src/assets/CabinetAssets/follow.svg" alt=""/>
-                                {idea.developers}
+                                {idea.supporters}
                             </div>
                             <div className="idea_interactable"
                             style={{color:'#DD403F'}}>

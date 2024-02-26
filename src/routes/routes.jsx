@@ -5,6 +5,7 @@ import SignUpPage from '../pages/SignUpPage'
 import CabinetPage from '../pages/CabinetPage'
 import ConfirmPage from '../pages/ConfirmPage'
 import ProfilePage from '../pages/ProfilePage'
+import IdeasPage from '../pages/IdeasPage'
 import NotFoundPage from '../pages/NotFoundPage'
 const MainRoutes = () => {
     const PUBLIC_ROUTES=[
@@ -32,6 +33,10 @@ const MainRoutes = () => {
           element:<ProfilePage/>,
           path:'/profile',
           id:6,
+        },{
+          element:<IdeasPage/>,
+          path:'/ideas',
+          id:7,
         },{
           element:<NotFoundPage/>,
           path:'*',
